@@ -25,15 +25,12 @@ p2 = [0, 0, 1];
 T = eye(4);
 T(1:3,4)= p1';
 q = IK(T,robot);
-i=1;
 for ti = t
-   J = Jac_Agilus(q,robot); 
-   dq(i,:) = J * [V(:,i)' 0 0 0]';
    
-   q =q+dq(i,:)*dt;
-   i=i+1;
+   J = Jac_Agilus(q,robot); 
+   dq = J * V(i)
 end
 
-% plot(t,dq(:,6));
+plot(t,V(1,:));
 
 

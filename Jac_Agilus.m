@@ -1,5 +1,8 @@
 function J = Jac_Agilus(q,robot,tool)
 
+if (nargin ==2 )
+    tool = eye(4);
+end
 
 Htx = [0 0 0 1;
     0 0 0 0; 
