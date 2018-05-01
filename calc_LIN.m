@@ -1,4 +1,4 @@
-function [V , t] = calc_LIN(p1,p2,Vmax_c,a_max_c)
+function [dq , t] = calc_LIN(p1,p2,Vmax_c,a_max_c,robot)
 dt=0.01;
 V_vec = p2-p1;
 L = sqrt(sum(V_vec.^2));
@@ -41,9 +41,21 @@ n=i-1;
 V_vec = V_vec/L;
 
 for i =1:n
-    V(1,i) = V_vec(1)*V_m(i);
-    V(3,i) = V_vec(2)*V_m(i);
-    V(2,i) = V_vec(3)*V_m(i);
+    V(:,i) = V_vec*V_m(i); 
 end
+
+T = eye(4);
+T(1:3,4)= p1';
+q = IK(T,robot);
+i=1;
+for ti = t
+   J = Jac_Agilus(q,robot); 
+   dq(i,:) = inv(J) * [V(:,i)' 0 0 0]';
+   
+   q =q+dq(i,:)*dt;
+   i=i+1;
+end
+
+
 
 end

@@ -30,7 +30,8 @@ Hrz = [0 -1 0 0;
     0 0 0 0];
 
 T = FK(q,robot);
-R = T(1:3,1:3);
+% R = T(1:3,1:3);
+T(1:3,4) = [ 0 0 0]';
 
 % del_q3=atan2(robot.Links(5).length,robot.Links(4).length);
 % d3_=sqrt(robot.Links(5).length^2+robot.Links(4).length^2);
@@ -49,19 +50,18 @@ T4Hr=Rx(q(4)+robot.Joints(4).error)*Hrx;
 T5Hr=Ry(q(5)+robot.Joints(5).error)*Hry;
 T6Hr=Rx(q(6)+robot.Joints(6).error)*Hrx*Tx(robot.Links(6).length);
 
-Jac1 = T1Hr*T2*T3*T4*T5*T6*tool*[inv(R) [0 0 0]'; 0 0 0 1];
-Jac2 = T1*T2Hr*T3*T4*T5*T6*tool*[inv(R) [0 0 0]'; 0 0 0 1];
-Jac3 = T1*T2*T3Hr*T4*T5*T6*tool*[inv(R) [0 0 0]'; 0 0 0 1];
-Jac4 = T1*T2*T3*T4Hr*T5*T6*tool*[inv(R) [0 0 0]'; 0 0 0 1];
-Jac5 = T1*T2*T3*T4*T5Hr*T6*tool*[inv(R) [0 0 0]'; 0 0 0 1];
-Jac6 = T1*T2*T3*T4*T5*T6Hr*tool*[inv(R) [0 0 0]'; 0 0 0 1];
+Jac1 = T1Hr*T2*T3*T4*T5*T6*tool*inv(T);
+Jac2 = T1*T2Hr*T3*T4*T5*T6*tool*inv(T);
+Jac3 = T1*T2*T3Hr*T4*T5*T6*tool*inv(T);
+Jac4 = T1*T2*T3*T4Hr*T5*T6*tool*inv(T);
+Jac5 = T1*T2*T3*T4*T5Hr*T6*tool*inv(T);
+Jac6 = T1*T2*T3*T4*T5*T6Hr*tool*inv(T);
 
 
   J1 = [Jac1(1:3,4);
       Jac1(3,2);
       Jac1(1,3);
       Jac1(2,1)];
-
   J2 = [Jac2(1:3,4);
       Jac2(3,2);
       Jac2(1,3);

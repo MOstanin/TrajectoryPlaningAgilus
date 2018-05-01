@@ -1,6 +1,6 @@
 function q = IK(Tgoal,robot,n)
 
-del_q3=atan2(robot.Links(5).length,robot.Links(4).length);
+del_q3=atan2(robot.Links(4).length,robot.Links(5).length);
 d3_=sqrt(robot.Links(5).length^2+robot.Links(4).length^2);
 
 T0= Tgoal*inv(Tx(robot.Links(6).length));
@@ -12,12 +12,13 @@ c3=(a^2+b^2-robot.Links(3).length^2-d3_^2)/...
     (2*robot.Links(3).length*d3_);
 s3=sqrt(1-c3^2);
 q3_=atan2(s3,c3);
-q3= q3_- del_q3;
-q2_=-atan2(d3_*sin(q3_),(robot.Links(3).length+d3_*cos(q3_)))+atan2(a,b);
-q2 = q2_-pi/2;
+q3= q3_ + del_q3;
+q2_=atan2(d3_*sin(q3_),(robot.Links(3).length+d3_*cos(q3_)))+atan2(b,a);
+q2 = -q2_;
 T1=Tz(robot.Links(1).length)*Rz(q1_)*Tx(robot.Links(2).length);
 T2=Ry(q2)*Tx(robot.Links(3).length);
-T3=Ry(q3_)*Tx(d3_)*Ry(-del_q3);
+% T3=Ry(q3_)*Tx(d3_)*Ry(-del_q3);
+T3=Ry(q3)*Tz(robot.Links(4).length)*Tx(robot.Links(5).length);
 
 T456ans = inv(T1*T2*T3)*T0;
 
