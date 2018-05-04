@@ -23,25 +23,22 @@ X = X / sqrt(sum(X.^2));
 Y = Y / sqrt(sum(Y.^2));
 
 x3_ = cross(p3-p1,Y);
+x3 = sqrt(sum(x3_.^2));
 
-if ((p3-p1)*Y' > 0)
-    x3 = -sqrt(sum(x3_.^2));
-else
-    x3 = sqrt(sum(x3_.^2));
-end
 y3_ = cross(p3-p1,X);
 
 if ((p3-p1)*X' > 0)
-    y3 = -sqrt(sum(y3_.^2));
-else
     y3 = sqrt(sum(y3_.^2));
+else
+    y3 = -sqrt(sum(y3_.^2));
 end
+
 
 
 x0 = -0.5 * (y2 * (x3 * x3 + y3 * y3) + y3 * (0 - x2 * x2 - y2 * y2)) / (x2 * y3 + x3 * (-y2));
 y0 = 0.5 * (x2 * (x3 * x3 + y3 * y3) + x3 * (0 - x2 * x2 - y2 * y2)) / (x2 * y3 + x3 * (-y2));
 
-R = sqrt( x0 * x0 + y0 * y0); 
+R = sqrt( x0 * x0 + y0 * y0);
 
 p0 = p1 + X*x0 + Y*y0;
 
@@ -94,13 +91,13 @@ p_old = p1;
 for i=1:n
     phi = phi + sign(dphi)*V_m(i)*dt/R;
     x = x0 + R * cos(phi);
-    y = y0 + R * sin(phi); 
+    y = y0 + R * sin(phi);
     
     p = p1 + X*x + Y*y;
 %     plot3(p(1),p(2),p(3),'.');
-%     V_vec(i,:) = cross(p-p0, Z);
-%     V_vec(i,:) = V_vec(i,:)/ sqrt(sum(V_vec(i,:).^2));
-%     plot3([p(1); p(1)+V_vec(i,1)], [p(2); p(2)+V_vec(i,2)], [p(3); p(3)+V_vec(i,3)])
+    %     V_vec(i,:) = cross(p-p0, Z);
+    %     V_vec(i,:) = V_vec(i,:)/ sqrt(sum(V_vec(i,:).^2));
+    %     plot3([p(1); p(1)+V_vec(i,1)], [p(2); p(2)+V_vec(i,2)], [p(3); p(3)+V_vec(i,3)])
     V(:,i) = (p - p_old)/dt;
     p_old = p;
 end
@@ -109,24 +106,24 @@ end
 % plot3(p2(1),p2(2),p2(3),'*');
 % plot3(p3(1),p3(2),p3(3),'*');
 
-% plot(V(1,:)) 
+% plot(V(1,:))
 p=p1;
 T = eye(4);
 T(1:3,4)= p1';
 q = IK(T,robot);
 i=1;
 for ti = t
-   J = Jac_Agilus(q,robot); 
-   dq(i,:) = J \ [V(:,i)' 0 0 0]';
-   
-   q =q+dq(i,:)*dt;
-   
-   
-   p = p + V(:,i)'*dt;
-%    plot3(p(1),p(2),p(3),'o');
-   i=i+1;
+    J = Jac_Agilus(q,robot);
+    dq(i,:) = J \ [V(:,i)' 0 0 0]';
+    
+    q =q+dq(i,:)*dt;
+    
+    
+    p = p + V(:,i)'*dt;
+    %    plot3(p(1),p(2),p(3),'o');
+    i=i+1;
 end
- 
+
 
 
 end

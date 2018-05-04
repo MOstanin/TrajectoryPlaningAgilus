@@ -45,7 +45,7 @@ for ti = t
 end
 end
 
-
+V = V';
 end
 
 function a_j = calc_a(dq, tm_a, tm_b, dt)
